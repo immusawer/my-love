@@ -63,7 +63,7 @@ export default function App() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        My Heart Belongs to You
+        Paroo Aziz{" "}
       </motion.h1>
 
       {/* Romantic Message */}
@@ -84,11 +84,7 @@ export default function App() {
         transition={{ duration: 1.5, delay: 1 }}
       >
         <p className="text-2xl md:text-3xl text-red-700 font-semibold leading-relaxed">
-          عسل من، نگران نباش
-          <br />
-          همه چیز خوب میشه
-          <br />
-          مامایت صحتمند میشه{" "}
+          سینه ات د دهنم{" "}
         </p>
         <p className="mt-4 text-lg text-red-600">
           میبوسم از لبت
