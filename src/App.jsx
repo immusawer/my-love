@@ -1,352 +1,302 @@
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useCallback } from "react";
+import { Heart, Sparkles, Star, Flower2, Crown } from "lucide-react";
 
-export default function App() {
-  const [hearts, setHearts] = useState([]);
-  const [sparkles, setSparkles] = useState([]);
+export default function LoveLetter() {
+  const [particles, setParticles] = useState([]);
+  const [currentMessage, setCurrentMessage] = useState(0);
 
-  // Generate floating hearts
-  useEffect(() => {
-    const heartInterval = setInterval(() => {
-      setHearts((prev) => [
-        ...prev,
-        {
-          id: Date.now() + Math.random(),
-          left: Math.random() * 100,
-          size: Math.random() * 25 + 20,
-          emoji: ["❤️", "💖", "💗", "💓", "💞", "💕"][
-            Math.floor(Math.random() * 6)
-          ],
-        },
-      ]);
-    }, 200);
+  const messages = [
+    {
+      title: "My Dearest Asal",
+      text: "Every moment with you is a precious gift I cherish deeply",
+      emoji: "💝",
+    },
+    {
+      title: "عسل زیبای من",
+      text: "چشمانت مانند ستاره‌ها در شب تاریک زندگی من می‌درخشد",
+      emoji: "✨",
+    },
+    {
+      title: "My Eternal Love",
+      text: "You are the missing piece that makes my life complete",
+      emoji: "🌹",
+    },
+  ];
 
-    return () => clearInterval(heartInterval);
-  }, []);
-
-  // Generate sparkles on click
-  useEffect(() => {
-    const handleClick = (e) => {
-      setSparkles((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          x: e.clientX,
-          y: e.clientY,
-        },
-      ]);
-
-      setTimeout(() => {
-        setSparkles((prev) => prev.slice(1));
-      }, 2000);
+  const createParticle = useCallback((type) => {
+    const id = Date.now() + Math.random();
+    const types = {
+      heart: { emoji: "❤️", color: "text-red-400" },
+      sparkle: { emoji: "✨", color: "text-yellow-300" },
+      flower: { emoji: "🌸", color: "text-pink-300" },
     };
 
-    window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
+    return {
+      id,
+      type,
+      left: Math.random() * 100,
+      ...types[type],
+      size: Math.random() * 20 + 15,
+      duration: 4 + Math.random() * 3,
+    };
+  }, []);
+
+  useEffect(() => {
+    const intervals = {
+      heart: setInterval(() => {
+        setParticles((prev) => [...prev, createParticle("heart")]);
+      }, 400),
+      sparkle: setInterval(() => {
+        setParticles((prev) => [...prev, createParticle("sparkle")]);
+      }, 300),
+      flower: setInterval(() => {
+        setParticles((prev) => [...prev, createParticle("flower")]);
+      }, 500),
+    };
+
+    // Auto-advance messages
+    const messageInterval = setInterval(() => {
+      setCurrentMessage((prev) => (prev + 1) % messages.length);
+    }, 5000);
+
+    return () => {
+      Object.values(intervals).forEach(clearInterval);
+      clearInterval(messageInterval);
+    };
+  }, [createParticle, messages.length]);
+
+  // Cleanup particles
+  useEffect(() => {
+    const cleanup = setInterval(() => {
+      setParticles((prev) => prev.slice(-50)); // Keep only recent particles
+    }, 1000);
+
+    return () => clearInterval(cleanup);
   }, []);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 via-purple-400 to-red-300 p-6 text-center overflow-hidden font-sans cursor-pointer">
-      {/* Animated background gradient */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-pink-400/30 via-purple-400/30 to-red-300/30"
-        animate={{
-          background: [
-            "linear-gradient(45deg, #ff6b6b, #ff8e8e, #ffb6c1)",
-            "linear-gradient(45deg, #ffb6c1, #ff8e8e, #ff6b6b)",
-            "linear-gradient(45deg, #ff8e8e, #ff6b6b, #ffb6c1)",
-          ],
-        }}
-        transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
-      />
-
-      {/* Floating hearts */}
-      {hearts.map((heart) => (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden flex items-center justify-center p-4">
+      {/* Animated Background Gradient */}
+      <div className="absolute inset-0">
         <motion.div
-          key={heart.id}
-          className="absolute pointer-events-none"
-          style={{
-            left: `${heart.left}%`,
-            bottom: -50,
-            fontSize: `${heart.size}px`,
-            filter: "drop-shadow(0 0 10px rgba(255,255,255,0.8))",
-          }}
+          className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-purple-500/10"
           animate={{
-            y: -800,
-            opacity: [0, 1, 0.8, 0],
-            rotate: [0, Math.random() * 360],
-            scale: [0.8, 1.2, 0.9],
+            opacity: [0.3, 0.6, 0.3],
           }}
-          transition={{
-            duration: 6 + Math.random() * 4,
-            ease: "easeOut",
-          }}
-          onAnimationComplete={() => {
-            setHearts((prev) => prev.filter((h) => h.id !== heart.id));
-          }}
-        >
-          {heart.emoji}
-        </motion.div>
-      ))}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
+      </div>
 
-      {/* Click sparkles */}
-      {sparkles.map((sparkle) => (
-        <motion.div
-          key={sparkle.id}
-          className="absolute pointer-events-none text-3xl"
-          style={{
-            left: sparkle.x - 20,
-            top: sparkle.y - 20,
-          }}
-          animate={{
-            scale: [0, 1.5, 0],
-            opacity: [0, 1, 0],
-            rotate: [0, 180],
-          }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-        >
-          ✨
-        </motion.div>
-      ))}
-
-      {/* Continuous sparkle background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(30)].map((_, i) => (
+      {/* Floating Particles */}
+      <AnimatePresence>
+        {particles.map((particle) => (
           <motion.div
-            key={i}
-            className="absolute text-yellow-200 text-2xl"
+            key={particle.id}
+            className={`absolute pointer-events-none ${particle.color} text-2xl`}
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              bottom: "0%",
+            }}
+            initial={{
+              y: 0,
+              opacity: 0,
+              scale: 0,
             }}
             animate={{
+              y: -1000,
               opacity: [0, 1, 0],
-              scale: [0.5, 1.5, 0.5],
-              rotate: [0, 180, 360],
+              scale: [0, 1.2, 0.8],
+              rotate: [0, particle.type === "heart" ? 360 : 0],
             }}
+            exit={{ opacity: 0 }}
             transition={{
-              duration: 3 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 5,
+              duration: particle.duration,
+              ease: "easeOut",
             }}
           >
-            ✨
+            {particle.emoji}
           </motion.div>
         ))}
-      </div>
+      </AnimatePresence>
 
-      {/* Floating rose petals */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(25)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-pink-300 text-3xl"
-            style={{
-              left: `${Math.random() * 120 - 10}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, 600],
-              x: [0, Math.random() * 200 - 100],
-              opacity: [0, 0.8, 0],
-              rotate: [0, 360],
-            }}
-            transition={{
-              duration: 8 + Math.random() * 7,
-              repeat: Infinity,
-              delay: Math.random() * 10,
-            }}
-          >
-            {["🌸", "🌺", "🌷", "💮"][Math.floor(Math.random() * 4)]}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Main Content Container */}
+      {/* Main Content Card */}
       <motion.div
-        className="relative z-10 bg-white/20 backdrop-blur-lg rounded-3xl p-8 md:p-12 shadow-2xl border-2 border-white/30"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.5, type: "spring" }}
+        className="relative z-10 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-8 md:p-12 max-w-2xl w-full mx-auto"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, type: "spring" }}
       >
-        {/* Glowing Main Heart */}
-        <motion.div
-          className="relative text-8xl md:text-[12rem] mb-6 mx-auto w-fit"
-          animate={{
-            scale: [1, 1.4, 1],
-            rotate: [0, -5, 5, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
+        {/* Header with Crown */}
+        <div className="text-center mb-8">
           <motion.div
-            className="absolute inset-0 text-red-500 filter blur-md opacity-70"
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.3, 0.7, 0.3],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
+            className="inline-flex items-center gap-3 mb-4"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.5, type: "spring" }}
           >
-            ❤️
+            <Crown className="w-8 h-8 text-yellow-400" />
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+              For My Queen Halima
+            </h1>
+            <Crown className="w-8 h-8 text-yellow-400" />
           </motion.div>
-          <motion.div
-            className="relative text-red-600 drop-shadow-2xl"
-            whileHover={{ scale: 1.2, rotate: 360 }}
-            transition={{ duration: 0.5 }}
-          >
-            ❤️
-          </motion.div>
-        </motion.div>
 
-        {/* Title with gradient shine */}
-        <motion.h1
-          className="mt-4 text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-red-600 via-pink-500 to-purple-600 bg-clip-text text-transparent"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-        >
-          <motion.span
-            animate={{
-              textShadow: [
-                "0 0 20px rgba(255,255,255,0.5)",
-                "0 0 30px rgba(255,105,180,0.8)",
-                "0 0 20px rgba(255,255,255,0.5)",
-              ],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            My Sweet Asal 🍯
-          </motion.span>
-        </motion.h1>
+          {/* Animated Message Carousel */}
+          <div className="h-32 relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentMessage}
+                className="absolute inset-0 flex flex-col items-center justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <motion.h2
+                  className="text-2xl md:text-3xl font-semibold text-white mb-3 flex items-center gap-2"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  {messages[currentMessage].title}
+                  <span>{messages[currentMessage].emoji}</span>
+                </motion.h2>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  {messages[currentMessage].text}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
 
-        {/* Romantic Quote */}
+        {/* Love Metrics */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[
+            {
+              icon: Heart,
+              label: "Days Loved",
+              value: "∞",
+              color: "text-red-400",
+            },
+            {
+              icon: Star,
+              label: "Memories",
+              value: "1M+",
+              color: "text-yellow-400",
+            },
+            {
+              icon: Sparkles,
+              label: "Magic",
+              value: "100%",
+              color: "text-purple-400",
+            },
+            {
+              icon: Flower2,
+              label: "Romance",
+              value: "Always",
+              color: "text-pink-400",
+            },
+          ].map((item, index) => (
+            <motion.div
+              key={item.label}
+              className="bg-white/5 rounded-2xl p-4 text-center border border-white/5"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8 + index * 0.1 }}
+              whileHover={{
+                scale: 1.05,
+                backgroundColor: "rgba(255,255,255,0.1)",
+              }}
+            >
+              <item.icon className={`w-8 h-8 mx-auto mb-2 ${item.color}`} />
+              <div className="text-2xl font-bold text-white">{item.value}</div>
+              <div className="text-sm text-gray-400 mt-1">{item.label}</div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Persian Love Section */}
         <motion.div
-          className="mb-8 p-6 bg-white/30 rounded-2xl border-2 border-white/40 shadow-xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-        >
-          <motion.p
-            className="text-2xl md:text-3xl text-red-800 font-light italic leading-relaxed"
-            animate={{
-              textShadow: [
-                "0 0 10px rgba(255,255,255,0.5)",
-                "0 0 15px rgba(255,255,255,0.8)",
-                "0 0 10px rgba(255,255,255,0.5)",
-              ],
-            }}
-            transition={{ duration: 3, repeat: Infinity }}
-          >
-            "You are the honey that sweetens my life,
-            <br />
-            the light that guides my heart"
-          </motion.p>
-        </motion.div>
-
-        {/* Persian Love Message */}
-        <motion.div
-          className="mb-8 p-8 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-2xl border-2 border-white/30 shadow-2xl"
+          className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-2xl p-6 mb-6 border border-pink-500/20"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 1.2 }}
+          transition={{ delay: 1.2 }}
         >
+          <h3 className="text-xl font-semibold text-white text-center mb-4 flex items-center justify-center gap-2">
+            <Heart className="w-5 h-5 text-red-400" />
+            برای عسل شیرینم
+            <Heart className="w-5 h-5 text-red-400" />
+          </h3>
+          <div className="text-right space-y-3">
+            <p className="text-lg text-gray-200 leading-8">
+              تو همان رویایی هستی که همیشه در قلبم بود
+            </p>
+            <p className="text-lg text-gray-200 leading-8">
+              هر لحظه با تو، قصه ایست زیبا در دفتر زندگی ام
+            </p>
+            <p className="text-lg text-gray-200 leading-8">
+              تا ابد عاشق تو خواهم ماند
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Promise Section */}
+        <motion.div
+          className="text-center space-y-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+        >
+          <div className="flex items-center justify-center gap-4 text-gray-400">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/20"></div>
+            <span className="text-sm">My Vow</span>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/20"></div>
+          </div>
+
           <motion.p
-            className="text-3xl md:text-4xl text-white font-bold leading-relaxed drop-shadow-lg"
-            animate={{
-              y: [0, -5, 0],
-            }}
-            transition={{ duration: 4, repeat: Infinity }}
+            className="text-xl text-white font-light italic leading-relaxed"
+            whileHover={{ scale: 1.02 }}
           >
-            عسل شیرین من 💝
+            "I promise to stand by you, cherish you, and love you more with each
+            passing day"
           </motion.p>
-          <motion.p
-            className="text-xl md:text-2xl text-white/90 font-medium mt-4 leading-loose"
+
+          {/* Signature */}
+          <motion.div
+            className="mt-6 pt-6 border-t border-white/10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.5 }}
+            transition={{ delay: 2 }}
           >
-            چشمانت مانند ستاره‌ها می‌درخشد
-            <br />
-            و قلبم برای همیشه مال توست
-            <br />
-            تو زیباترین رویای من هستی ✨
-          </motion.p>
-        </motion.div>
-
-        {/* Love Promise */}
-        <motion.div
-          className="mb-8 p-6 bg-gradient-to-r from-pink-500 to-red-500 rounded-2xl shadow-2xl border-2 border-white/40"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 1.8 }}
-        >
-          <motion.p
-            className="text-2xl md:text-3xl text-white font-bold mb-4"
-            animate={{
-              scale: [1, 1.05, 1],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            💖 Promise of My Heart 💖
-          </motion.p>
-          <p className="text-xl text-white/90 font-medium italic">
-            "I promise to cherish every moment with you, to love you more each
-            day, and to always be your safe haven"
-          </p>
-        </motion.div>
-
-        {/* Forever Signature */}
-        <motion.div
-          className="p-6 bg-white/40 rounded-2xl border-2 border-white/50 shadow-lg"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 2.2 }}
-        >
-          <motion.p
-            className="text-2xl text-red-700 font-bold"
-            animate={{
-              textShadow: "0 0 20px rgba(255,255,255,0.8)",
-            }}
-            whileHover={{ scale: 1.1 }}
-          >
-            Forever Yours,
-            <br />
-            <span className="text-3xl bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
+            <p className="text-lg text-gray-400">Forever yours,</p>
+            <p className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mt-2">
               Your Eternal Love
-            </span>
-          </motion.p>
+            </p>
+          </motion.div>
         </motion.div>
       </motion.div>
 
-      {/* Floating love phrases */}
+      {/* Background Decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {["I Love You", "My Asal", "Forever", "💝", "My Honey"].map(
-          (text, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-white/40 text-xl font-bold"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -100, 0],
-                opacity: [0, 0.7, 0],
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: 10 + Math.random() * 10,
-                repeat: Infinity,
-                delay: Math.random() * 5,
-              }}
-            >
-              {text}
-            </motion.div>
-          )
-        )}
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-white/5 text-6xl"
+            style={{
+              left: `${20 + i * 30}%`,
+              top: `${20 + i * 20}%`,
+            }}
+            animate={{
+              rotate: [0, 360],
+            }}
+            transition={{
+              duration: 20 + i * 10,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            ❤️
+          </motion.div>
+        ))}
       </div>
     </div>
   );
