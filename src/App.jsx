@@ -2,25 +2,30 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useCallback } from "react";
 import { Heart, Sparkles, Star, Flower2, Crown } from "lucide-react";
 
-export default function LoveLetter() {
+export default function MarriageProposal() {
   const [particles, setParticles] = useState([]);
   const [currentMessage, setCurrentMessage] = useState(0);
 
   const messages = [
     {
-      title: "My Dearest Asal",
-      text: "Every moment with you is a precious gift I cherish deeply",
-      emoji: "💝",
+      title: "My Dearest Halima",
+      text: "You are the peace I never knew I needed, the calm in my chaos.",
+      emoji: "💞",
     },
     {
-      title: "عسل زیبای من",
-      text: "چشمانت مانند ستاره‌ها در شب تاریک زندگی من می‌درخشد",
-      emoji: "✨",
+      title: "Asal Ma",
+      text: "چشمانت، آینه‌ی آرامش من است، صدایت، نغمه‌ی عشق جاودانم 💫",
+      emoji: "🌙",
     },
     {
-      title: "My Eternal Love",
-      text: "You are the missing piece that makes my life complete",
+      title: "My Forever Dream",
+      text: "Every heartbeat whispers your name — my destiny, my love.",
       emoji: "🌹",
+    },
+    {
+      title: "My One & Only",
+      text: "From the very first moment, my soul recognized you as home.",
+      emoji: "💍",
     },
   ];
 
@@ -55,7 +60,6 @@ export default function LoveLetter() {
       }, 500),
     };
 
-    // Auto-advance messages
     const messageInterval = setInterval(() => {
       setCurrentMessage((prev) => (prev + 1) % messages.length);
     }, 5000);
@@ -66,10 +70,9 @@ export default function LoveLetter() {
     };
   }, [createParticle, messages.length]);
 
-  // Cleanup particles
   useEffect(() => {
     const cleanup = setInterval(() => {
-      setParticles((prev) => prev.slice(-50)); // Keep only recent particles
+      setParticles((prev) => prev.slice(-50));
     }, 1000);
 
     return () => clearInterval(cleanup);
@@ -77,13 +80,11 @@ export default function LoveLetter() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden flex items-center justify-center p-4">
-      {/* Animated Background Gradient */}
+      {/* Animated Background */}
       <div className="absolute inset-0">
         <motion.div
           className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-purple-500/10"
-          animate={{
-            opacity: [0.3, 0.6, 0.3],
-          }}
+          animate={{ opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 4, repeat: Infinity }}
         />
       </div>
@@ -98,11 +99,7 @@ export default function LoveLetter() {
               left: `${particle.left}%`,
               bottom: "0%",
             }}
-            initial={{
-              y: 0,
-              opacity: 0,
-              scale: 0,
-            }}
+            initial={{ y: 0, opacity: 0, scale: 0 }}
             animate={{
               y: -1000,
               opacity: [0, 1, 0],
@@ -110,24 +107,21 @@ export default function LoveLetter() {
               rotate: [0, particle.type === "heart" ? 360 : 0],
             }}
             exit={{ opacity: 0 }}
-            transition={{
-              duration: particle.duration,
-              ease: "easeOut",
-            }}
+            transition={{ duration: particle.duration, ease: "easeOut" }}
           >
             {particle.emoji}
           </motion.div>
         ))}
       </AnimatePresence>
 
-      {/* Main Content Card */}
+      {/* Main Content */}
       <motion.div
         className="relative z-10 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-8 md:p-12 max-w-2xl w-full mx-auto"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, type: "spring" }}
       >
-        {/* Header with Crown */}
+        {/* Header */}
         <div className="text-center mb-8">
           <motion.div
             className="inline-flex items-center gap-3 mb-4"
@@ -137,7 +131,7 @@ export default function LoveLetter() {
           >
             <Crown className="w-8 h-8 text-yellow-400" />
             <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-              For My Queen Halima
+              To My Queen, Halima (Asal Ma)
             </h1>
             <Crown className="w-8 h-8 text-yellow-400" />
           </motion.div>
@@ -191,7 +185,7 @@ export default function LoveLetter() {
             },
             {
               icon: Flower2,
-              label: "Romance",
+              label: "Faithfulness",
               value: "Always",
               color: "text-pink-400",
             },
@@ -223,23 +217,23 @@ export default function LoveLetter() {
         >
           <h3 className="text-xl font-semibold text-white text-center mb-4 flex items-center justify-center gap-2">
             <Heart className="w-5 h-5 text-red-400" />
-            برای عسل شیرینم
+            برای عسل من، حلیمه
             <Heart className="w-5 h-5 text-red-400" />
           </h3>
           <div className="text-right space-y-3">
             <p className="text-lg text-gray-200 leading-8">
-              تو همان رویایی هستی که همیشه در قلبم بود
+              تو تنها دلیل لبخندهای منی، نوری در تاریکی، آرامشی در طوفان.
             </p>
             <p className="text-lg text-gray-200 leading-8">
-              هر لحظه با تو، قصه ایست زیبا در دفتر زندگی ام
+              عشق تو در رگ‌هایم می‌دود، تا ابد در قلبم خانه دارد.
             </p>
             <p className="text-lg text-gray-200 leading-8">
-              تا ابد عاشق تو خواهم ماند
+              با تمام وجودم، فقط تو را می‌خواهم.
             </p>
           </div>
         </motion.div>
 
-        {/* Promise Section */}
+        {/* Proposal Section */}
         <motion.div
           className="text-center space-y-4"
           initial={{ opacity: 0 }}
@@ -248,46 +242,41 @@ export default function LoveLetter() {
         >
           <div className="flex items-center justify-center gap-4 text-gray-400">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/20"></div>
-            <span className="text-sm">My Vow</span>
+            <span className="text-sm">My Proposal</span>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/20"></div>
           </div>
 
           <motion.p
-            className="text-xl text-white font-light italic leading-relaxed"
-            whileHover={{ scale: 1.02 }}
+            className="text-2xl text-white font-light italic leading-relaxed"
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
           >
-            "I promise to stand by you, cherish you, and love you more with each
-            passing day"
+            “Asal Ma, will you make me the luckiest man alive... and marry me?”
           </motion.p>
 
-          {/* Signature */}
           <motion.div
             className="mt-6 pt-6 border-t border-white/10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2 }}
           >
+            <div className="text-4xl mb-2">💍</div>
             <p className="text-lg text-gray-400">Forever yours,</p>
             <p className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mt-2">
-              Your Eternal Love
+              Your Soldier of Love ❤️
             </p>
           </motion.div>
         </motion.div>
       </motion.div>
 
-      {/* Background Decorations */}
+      {/* Floating Hearts */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(3)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute text-white/5 text-6xl"
-            style={{
-              left: `${20 + i * 30}%`,
-              top: `${20 + i * 20}%`,
-            }}
-            animate={{
-              rotate: [0, 360],
-            }}
+            style={{ left: `${20 + i * 30}%`, top: `${20 + i * 20}%` }}
+            animate={{ rotate: [0, 360] }}
             transition={{
               duration: 20 + i * 10,
               repeat: Infinity,
