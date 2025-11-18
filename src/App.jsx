@@ -192,10 +192,7 @@ export default function MarriageProposal() {
               >
                 💍
               </motion.div>
-              <p className="text-xl font-semibold">
-                Will You Marry Me, Halima Jan?
-                <img src={i} alt="Pro" />
-              </p>
+              <img src={i} alt="Pro" />
             </div>
 
             {/* Animated ring */}
