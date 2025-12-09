@@ -36,7 +36,7 @@ export default function LoveNotebook() {
     title: "Our Eternal Love",
     subtitle: "A Collection of Our Most Precious Moments",
     names: "Halima & Musawer",
-    date: "Since October 10, 2023",
+    date: "Since October 10, 2025",
     quote:
       "In your eyes, I found my home. In your heart, I found my love. In your soul, I found my mate.",
     dedication:
