@@ -373,14 +373,13 @@ export default function LoveNotebook() {
       {/* Page content with perfect padding and margins */}
       <div className="p-6 md:p-10 lg:p-12">
         <div
-          className="font-handwriting text-base md:text-lg lg:text-xl text-rose-900 whitespace-pre-line leading-relaxed md:leading-loose"
+          className="font-handwriting text-base md:text-lg lg:text-xl text-rose-900 whitespace-pre-line leading-relaxed md:leading-loose mx-auto px-4"
           style={{
             fontFamily: "'Dancing Script', cursive",
             hyphens: "auto",
             wordBreak: "break-word",
             textAlign: "justify",
-            margin: "0 auto",
-            maxWidth: "800px",
+            maxWidth: "90%", // adapt for small screens
           }}
         >
           {pages[currentPage]}
@@ -424,7 +423,7 @@ export default function LoveNotebook() {
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute text-rose-200/20"
+            className="mt-6 md:mt-8 bg-white/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-lg border border-rose-200/30 overflow-x-auto"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -599,9 +598,9 @@ export default function LoveNotebook() {
                 <button
                   onClick={goToPrevPage}
                   disabled={isTurning || (showCover && currentPage === 0)}
-                  className="absolute top-1/2 left-3 md:left-4 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-md shadow-lg hover:bg-white hover:shadow-xl disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 border border-rose-200/50"
+                  className="absolute top-1/2 left-2 md:left-3 -translate-y-1/2 p-2.5 md:p-3 rounded-full bg-white/90 backdrop-blur-md shadow-lg hover:bg-white hover:shadow-xl disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 border border-rose-200/50"
                 >
-                  <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-rose-700" />
+                  <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-rose-700" />
                 </button>
 
                 {/* Next button */}
@@ -611,9 +610,9 @@ export default function LoveNotebook() {
                     isTurning ||
                     (!showCover && currentPage === pages.length - 1)
                   }
-                  className="absolute top-1/2 right-3 md:right-4 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-md shadow-lg hover:bg-white hover:shadow-xl disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 border border-rose-200/50"
+                  className="absolute top-1/2 right-2 md:right-3 -translate-y-1/2 p-2.5 md:p-3 rounded-full bg-white/90 backdrop-blur-md shadow-lg hover:bg-white hover:shadow-xl disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 border border-rose-200/50"
                 >
-                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-rose-700" />
+                  <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-rose-700" />
                 </button>
               </>
             )}
